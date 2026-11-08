@@ -24,7 +24,7 @@
         .product-card { background: #141414; border: 1px solid #262626; border-radius: 6px; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; text-align: left; }
         .product-card:hover { transform: translateY(-5px); border-color: #d4af37; }
         
-        .product-image { height: 240px; background: #222; display: flex; align-items: center; justify-content: center; color: #555; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .product-image { height: 240px; background: #222; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #555; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
         
         .product-info { padding: 20px; }
         .product-category { font-size: 0.75rem; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
@@ -51,86 +51,52 @@
     </section>
 
     <div class="container">
-        
-        <!-- WATCHES SECTION -->
-        <h3 class="section-title">Luxury Watches</h3>
-        <div class="grid">
-            <div class="product-card">
-                <div class="product-image">Watch Image Placeholder</div>
-                <div class="product-info">
-                    <div class="product-category">Timepieces</div>
-                    <div class="product-title">Asta Royal Chronograph</div>
-                    <div class="product-price">₹12,999</div>
-                    <a href="https://wa.me/91XXXXXXXXXX?text=Hi,%20I%20am%20interested%20in%20the%20Asta%20Royal%20Chronograph" class="btn-buy" target="_blank">Inquire / Order</a>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image">Watch Image Placeholder</div>
-                <div class="product-info">
-                    <div class="product-category">Timepieces</div>
-                    <div class="product-title">Asta Minimalist Gold</div>
-                    <div class="product-price">₹8,499</div>
-                    <a href="https://wa.me/91XXXXXXXXXX?text=Hi,%20I%20am%20interested%20in%20the%20Asta%20Minimalist%20Gold" class="btn-buy" target="_blank">Inquire / Order</a>
-                </div>
-            </div>
+        <h3 class="section-title">Featured Collections</h3>
+        <div class="grid" id="product-grid">
+            <p style="color: #888; text-align: center; grid-column: 1 / -1;">Loading products from CMS...</p>
         </div>
-
-        <!-- APPAREL SECTION -->
-        <h3 class="section-title">Apparel</h3>
-        <div class="grid">
-            <div class="product-card">
-                <div class="product-image">Apparel Image Placeholder</div>
-                <div class="product-info">
-                    <div class="product-category">Apparel</div>
-                    <div class="product-title">Tailored Evening Blazer</div>
-                    <div class="product-price">₹6,999</div>
-                    <a href="https://wa.me/91XXXXXXXXXX?text=Hi,%20I%20am%20interested%20in%20the%20Tailored%20Evening%20Blazer" class="btn-buy" target="_blank">Inquire / Order</a>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image">Apparel Image Placeholder</div>
-                <div class="product-info">
-                    <div class="product-category">Apparel</div>
-                    <div class="product-title">Silk Blend Luxury Shirt</div>
-                    <div class="product-price">₹3,499</div>
-                    <a href="https://wa.me/91XXXXXXXXXX?text=Hi,%20I%20am%20interested%20in%20the%20Silk%20Blend%20Luxury%20Shirt" class="btn-buy" target="_blank">Inquire / Order</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- FOOTWEAR SECTION -->
-        <h3 class="section-title">Footwear</h3>
-        <div class="grid">
-            <div class="product-card">
-                <div class="product-image">Footwear Image Placeholder</div>
-                <div class="product-info">
-                    <div class="product-category">Footwear</div>
-                    <div class="product-title">Handcrafted Leather Oxfords</div>
-                    <div class="product-price">₹5,999</div>
-                    <a href="https://wa.me/91XXXXXXXXXX?text=Hi,%20I%20am%20interested%20in%20the%20Handcrafted%20Leather%20Oxfords" class="btn-buy" target="_blank">Inquire / Order</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- WALLETS & ACCESSORIES -->
-        <h3 class="section-title">Wallets & Accessories</h3>
-        <div class="grid">
-            <div class="product-card">
-                <div class="product-image">Wallet Image Placeholder</div>
-                <div class="product-info">
-                    <div class="product-category">Accessories</div>
-                    <div class="product-title">Signature RFID Bifold Wallet</div>
-                    <div class="product-price">₹1,899</div>
-                    <a href="https://wa.me/91XXXXXXXXXX?text=Hi,%20I%20am%20interested%20in%20the%20Signature%20RFID%20Bifold%20Wallet" class="btn-buy" target="_blank">Inquire / Order</a>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <footer>
         <p>&copy; 2026 Asta Collections. All rights reserved.</p>
     </footer>
 
+    <script>
+        async function loadProducts() {
+            const grid = document.getElementById('product-grid');
+            try {
+                // Fetching the Decap CMS git gateway / folder listing or JSON manifest
+                // Adjust path depending on how your CMS is configured to store files (e.g., Markdown or JSON)
+                const response = await fetch('./content/products/index.json'); 
+                const products = await response.json();
+                
+                if (!products || products.length === 0) {
+                    grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1 / -1;">No products found.</p>';
+                    return;
+                }
+
+                grid.innerHTML = '';
+                products.forEach(product => {
+                    grid.innerHTML += `
+                        <div class="product-card">
+                            <div class="product-image" style="background-image: url('${product.image || ''}')">
+                                ${!product.image ? 'No Image' : ''}
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">${product.category || 'Collection'}</div>
+                                <div class="product-title">${product.title}</div>
+                                <div class="product-price">₹${product.price}</div>
+                                <a href="https://wa.me/91XXXXXXXXXX?text=${encodeURIComponent('Hi, I am interested in the ' + product.title)}" class="btn-buy" target="_blank">Inquire / Order</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Could not load dynamic products:', error);
+                grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1 / -1;">Please ensure your Decap CMS collection is configured to output JSON data.</p>';
+            }
+        }
+        loadProducts();
+    </script>
 </body>
 </html>
