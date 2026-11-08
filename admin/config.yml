@@ -1,5 +1,5 @@
 backend:
-  name: test-mode
+  name: github
   #repo: Asta-Collections/astacollections
   branch: main
 
