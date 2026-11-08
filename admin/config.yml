@@ -1,6 +1,6 @@
 backend:
   name: github
-  #repo: Asta-Collections/astacollections
+  repo: Asta-Collections/astacollections
   branch: main
 
 media_folder: "images"
