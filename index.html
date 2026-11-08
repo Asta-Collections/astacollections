@@ -1,102 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asta Collections | Luxury Fashion & Accessories</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
-        body { background-color: #0b0b0b; color: #f5f5f5; line-height: 1.6; }
-        
-        header { padding: 50px 20px; background: #000; border-bottom: 1px solid #222; text-align: center; }
-        h1 { font-size: 2.8rem; letter-spacing: 3px; text-transform: uppercase; color: #d4af37; }
-        p.subtitle { color: #aaa; margin-top: 10px; font-size: 1.1rem; letter-spacing: 1px; }
-
-        .hero { padding: 60px 20px; max-width: 900px; margin: 0 auto; text-align: center; }
-        .hero h2 { font-size: 2.2rem; margin-bottom: 15px; color: #fff; }
-        .hero p { color: #999; font-size: 1.05rem; margin-bottom: 30px; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .section-title { text-align: center; color: #d4af37; font-size: 1.8rem; margin: 40px 0 20px; text-transform: uppercase; letter-spacing: 1.5px; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; padding: 20px 0; }
-        
-        .product-card { background: #141414; border: 1px solid #262626; border-radius: 6px; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; text-align: left; }
-        .product-card:hover { transform: translateY(-5px); border-color: #d4af37; }
-        
-        .product-image { height: 240px; background: #222; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #555; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .product-info { padding: 20px; }
-        .product-category { font-size: 0.75rem; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .product-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; color: #fff; }
-        .product-price { font-size: 1.1rem; color: #f5f5f5; font-weight: bold; margin-bottom: 15px; }
-        
-        .btn-buy { display: block; width: 100%; padding: 10px; background: #d4af37; color: #000; text-align: center; text-decoration: none; font-weight: bold; border-radius: 4px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: background 0.2s; }
-        .btn-buy:hover { background: #c29b2e; }
-
-        footer { padding: 40px 20px; background: #000; color: #666; text-align: center; margin-top: 60px; border-top: 1px solid #222; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
-
-    <header>
-        <img src="https://lh3.googleusercontent.com/d/1zNZmmbepu61oMw3RIUZDFRozqeWgt59W" alt="Asta Collections Logo" style="max-height: 100px; margin-bottom: 15px;">
-        <h1>Asta Collections</h1>
-        <p class="subtitle">Timeless Elegance & Premium Style</p>
-    </header>
-
-    <section class="hero">
-        <h2>Curated Luxury for the Discerning Individual</h2>
-        <p>Explore our exclusive flagship selections across high-precision timepieces, tailored apparel, footwear, and handcrafted leather goods.</p>
-    </section>
-
-    <div class="container">
-        <h3 class="section-title">Featured Collections</h3>
-        <div class="grid" id="product-grid">
-            <p style="color: #888; text-align: center; grid-column: 1 / -1;">Loading products from CMS...</p>
-        </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2026 Asta Collections. All rights reserved.</p>
-    </footer>
-
+HTML
     <script>
         async function loadProducts() {
             const grid = document.getElementById('product-grid');
             try {
-                // Fetching the Decap CMS git gateway / folder listing or JSON manifest
-                // Adjust path depending on how your CMS is configured to store files (e.g., Markdown or JSON)
-                const response = await fetch('./content/products/index.json'); 
-                const products = await response.json();
-                
-                if (!products || products.length === 0) {
-                    grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1 / -1;">No products found.</p>';
+                // Fetch the list of files from your GitHub repository folder using GitHub's public API
+                const apiURL = 'https://api.github.com/repos/Asta-Collections/astacollections/contents/content/products';
+                const response = await fetch(apiURL);
+                const files = await response.json();
+
+                if (!Array.isArray(files) || files.length === 0) {
+                    grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1 / -1;">No products found in CMS yet.</p>';
                     return;
                 }
 
                 grid.innerHTML = '';
-                products.forEach(product => {
-                    grid.innerHTML += `
-                        <div class="product-card">
-                            <div class="product-image" style="background-image: url('${product.image || ''}')">
-                                ${!product.image ? 'No Image' : ''}
+
+                // Loop through each product JSON file and fetch its content
+                for (const file of files) {
+                    if (file.name.endsWith('.json')) {
+                        const productRes = await fetch(file.download_url);
+                        const product = await productRes.json();
+
+                        // Handle image field (can be a string or array if multiple)
+                        let imageUrl = '';
+                        if (Array.isArray(product.images) && product.images.length > 0) {
+                            imageUrl = product.images[0];
+                        } else if (typeof product.images === 'string') {
+                            imageUrl = product.images;
+                        }
+
+                        grid.innerHTML += `
+                            <div class="product-card">
+                                <div class="product-image" style="background-image: url('${imageUrl}')">
+                                    ${!imageUrl ? 'No Image' : ''}
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-category">${product.category || 'Collection'}</div>
+                                    <div class="product-title">${product.title}</div>
+                                    <div class="product-price">${product.price}</div>
+                                    <a href="${product.whatsapp_link || 'https://wa.me/91XXXXXXXXXX'}" class="btn-buy" target="_blank">Inquire / Order</a>
+                                </div>
                             </div>
-                            <div class="product-info">
-                                <div class="product-category">${product.category || 'Collection'}</div>
-                                <div class="product-title">${product.title}</div>
-                                <div class="product-price">₹${product.price}</div>
-                                <a href="https://wa.me/91XXXXXXXXXX?text=${encodeURIComponent('Hi, I am interested in the ' + product.title)}" class="btn-buy" target="_blank">Inquire / Order</a>
-                            </div>
-                        </div>
-                    `;
-                });
+                        `;
+                    }
+                }
+
             } catch (error) {
-                console.error('Could not load dynamic products:', error);
-                grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1 / -1;">Please ensure your Decap CMS collection is configured to output JSON data.</p>';
+                console.error('Error loading products:', error);
+                grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1 / -1;">Error loading products. Please check console.</p>';
             }
         }
         loadProducts();
     </script>
-</body>
-</html>
