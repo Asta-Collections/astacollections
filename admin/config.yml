@@ -11,11 +11,15 @@ collections:
     label: "Products"
     folder: "content/products"
     create: true
-    format: "json" # Crucial so JavaScript can read it easily
+    format: "json"
     fields:
       - {label: "Product Title", name: "title", widget: "string"}
+      - {label: "Product Number / SKU", name: "product_number", widget: "string"}
       - {label: "Category", name: "category", widget: "select", options: ["Watches", "Apparel", "Footwear", "Accessories"]}
-      - {label: "Price", name: "price", widget: "string"}
+      - {label: "Brand", name: "brand", widget: "select", options: ["Rolex", "Fossil", "Versace", "Gucci", "Other"]}
+      - {label: "Offer Price (e.g. ₹1,599)", name: "price", widget: "string"}
+      - {label: "MRP (Struck-through price, e.g. ₹2,199)", name: "mrp", widget: "string", required: false}
+      - {label: "Purchase Price (Admin Only - For Invoicing)", name: "purchase_price", widget: "string", required: false}
       - {label: "Product Images", name: "images", widget: "list", field: {label: "Image", name: "image", widget: "image"}}
       - {label: "Product Videos", name: "videos", widget: "file", multiple: true, required: false}
       - {label: "WhatsApp Order Link", name: "whatsapp_link", widget: "string"}
