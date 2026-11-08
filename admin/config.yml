@@ -1,5 +1,5 @@
 backend:
-  name: git-gateway
+  name: test-mode
   #repo: Asta-Collections/astacollections
   branch: main
 
