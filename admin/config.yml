@@ -16,6 +16,9 @@ collections:
       - {label: "Product Title", name: "title", widget: "string"}
       - {label: "Category", name: "category", widget: "select", options: ["Watches", "Apparel", "Footwear", "Accessories"]}
       - {label: "Price (e.g. ₹12,999)", name: "price", widget: "string"}
-      - {label: "Product Images", name: "images", widget: "image", multiple: true}
+      label: "Product Images"
+        name: "images"
+        widget: "list"
+        field: {label: "Image", name: "image", widget: "image"}
       - {label: "Product Videos", name: "videos", widget: "file", multiple: true, required: false}
       - {label: "WhatsApp Order Link", name: "whatsapp_link", widget: "string"}
