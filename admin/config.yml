@@ -16,7 +16,7 @@ collections:
       - {label: "Product Title", name: "title", widget: "string"}
       - {label: "Category", name: "category", widget: "select", options: ["Watches", "Apparel", "Footwear", "Accessories"]}
       - {label: "Price (e.g. ₹12,999)", name: "price", widget: "string"}
-      label: "Product Images"
+      - {label: "Product Images"
         name: "images"
         widget: "list"
         field: {label: "Image", name: "image", widget: "image"}
