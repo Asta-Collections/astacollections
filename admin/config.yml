@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: Asta-Collections/astacollections
   branch: main
 
 media_folder: "images"
