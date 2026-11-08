@@ -2,18 +2,3 @@ backend:
   name: github
   repo: Asta-Collections/astacollections
   branch: main
-
-media_folder: "images"
-public_folder: "/images"
-
-collections:
-  - name: "products"
-    label: "Products"
-    folder: "_products"
-    create: true
-    fields:
-      - {label: "Product Title", name: "title", widget: "string"}
-      - {label: "Category", name: "category", widget: "select", options: ["Timepieces", "Apparel", "Footwear", "Accessories"]}
-      - {label: "Price (e.g. ₹12,999)", name: "price", widget: "string"}
-      - {label: "Product Image", name: "image", widget: "image"}
-      - {label: "WhatsApp Order Link", name: "whatsapp_link", widget: "string"}
